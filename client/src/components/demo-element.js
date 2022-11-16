@@ -26,11 +26,7 @@ export class DemoElement extends LitElement {
     super();
     this.name = 'david';
     this.count = 0;
-    this.socket = io('http://localhost:3000', {
-      extraHeaders: {
-        "Access-Control-Allow-Origin": "*"
-      }
-    });
+    this.socket = io('http://localhost:3000', { extraHeaders: { "Access-Control-Allow-Origin": "*" } });
     this.socket.on('new connection', console.log);
   }
 
