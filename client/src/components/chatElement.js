@@ -10,6 +10,8 @@ export class ChatElem extends LitElement {
         return {
             name: { type: String },
             msg: { type: String },
+            div: { type: Object },
+            numOfmsg: { type: Number }
 
         };
     }
@@ -18,22 +20,16 @@ export class ChatElem extends LitElement {
         super();
         this.name = 'You';
         this.bot = 'Bot';
-        this.msg = '';
-
-
-        this.username = document.querySelector("username");
-        this.output = document.querySelector("output");
-        this.message = document.querySelector("message-input");
-        this.btn = document.querySelector(".message-submit");
+        this.numOfmsg = 0;
+        this.div;
 
 
         this.socket = io('http://localhost:3000', { extraHeaders: { "Access-Control-Allow-Origin": "*" } });
 
 
-        this.socket.on('new connection', console.log);
-
-        this.socket.on("chat", (_data) => {
-            this.msg = _data;
+        this.socket.on("respAnswer", (_data) => {
+            console.log(_data.botResp || _data._errAnswer);
+            this.numOfmsg++;
         })
     }
 
@@ -41,16 +37,14 @@ export class ChatElem extends LitElement {
 
     _textAreaVal = (e) => {
         this.socket.emit("chat", e.target.value);
-        let newMsg = document.querySelector(".messages-content");
     }
 
-    _clearTxtArea = () => {
-        $('#message-input').val("");
-    }
+
+
 
 
     render() {
-        const { _textAreaVal, msg, _clearTxtArea } = this;
+        const { _textAreaVal, msg } = this;
 
         return html`
 
@@ -59,13 +53,9 @@ export class ChatElem extends LitElement {
         href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.3/jquery.mCustomScrollbar.min.css">
     <link rel="stylesheet" href="./src/components/chat/chat.css">
     
-    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     
     
-    <script
-        src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.3/jquery.mCustomScrollbar.concat.min.js">
-    </script>
+    
     
     
     <div class="chat">
@@ -77,16 +67,20 @@ export class ChatElem extends LitElement {
             </figure>
         </div>
         <div class="messages">
-            <div class="messages-content">You: ${msg}</div>
+            <div class="messages-content">${this.numOfmsg % 2 === 0 ? html`bot:<div>200</div>` : html`you:<div>404</div>`}
+            </div>
         </div>
         <div class="message-box">
             <textarea @change="${_textAreaVal}" type="text" class="message-input" placeholder="Type message..."></textarea>
-            <button style="cursor:pointer" @click="${_clearTxtArea}" type="submit" class="message-submit">Send</button>
+            <button style="cursor:pointer" type="submit" class="message-submit">Send</button>
         </div>
     
     </div>
     <div class="bg"></div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+    
+    
+    
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
 
         `;
     }
