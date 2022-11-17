@@ -21,19 +21,27 @@ export class ChatElem extends LitElement {
         this.msg = '';
 
 
+        this.username = document.querySelector("username");
+        this.output = document.querySelector("output");
+        this.message = document.querySelector("message-input");
+        this.btn = document.querySelector(".message-submit");
+
+
         this.socket = io('http://localhost:3000', { extraHeaders: { "Access-Control-Allow-Origin": "*" } });
 
 
         this.socket.on('new connection', console.log);
 
         this.socket.on("chat", (_data) => {
-            this.msg += _data
+            this.msg = _data;
         })
     }
 
+
+
     _textAreaVal = (e) => {
         this.socket.emit("chat", e.target.value);
-
+        let newMsg = document.querySelector(".messages-content");
     }
 
     _clearTxtArea = () => {
@@ -59,10 +67,6 @@ export class ChatElem extends LitElement {
         src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.3/jquery.mCustomScrollbar.concat.min.js">
     </script>
     
-    <script src="src/components/chat/ballon.js"></script>
-    
-    
-    
     
     <div class="chat">
         <div class="chat-title">
@@ -73,12 +77,11 @@ export class ChatElem extends LitElement {
             </figure>
         </div>
         <div class="messages">
-            <div class="messages-content">${this.name}:${msg}</div>
+            <div class="messages-content">You: ${msg}</div>
         </div>
         <div class="message-box">
-            <textarea id="message-input" @change="${_textAreaVal}" type="text" class="message-input"
-                placeholder="Type message..."></textarea>
-            <button @click="${_clearTxtArea}" type="submit" class="message-submit">Send</button>
+            <textarea @change="${_textAreaVal}" type="text" class="message-input" placeholder="Type message..."></textarea>
+            <button style="cursor:pointer" @click="${_clearTxtArea}" type="submit" class="message-submit">Send</button>
         </div>
     
     </div>
@@ -87,6 +90,11 @@ export class ChatElem extends LitElement {
 
         `;
     }
+
+
+
+
+
 
 
 

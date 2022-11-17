@@ -3,6 +3,7 @@ import httpServer from 'http';
 import { Server, Socket } from 'socket.io';
 import cors from 'cors';
 
+
 const app = express();
 
 app.use(cors());
@@ -31,12 +32,11 @@ io.on('connection', (_socket) => {
     _socket.emit('new connection', 'new connection');
 
     _socket.on("chat", (_data) => {
+        console.log(_data)
         io.sockets.emit("chat", _data);
     })
 
-
-
-
-
-
+    _socket.on("disconnect", (_msg) => {
+        console.log({ socketID: _socket.id, disconnect: true });
+    })
 });
