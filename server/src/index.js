@@ -71,7 +71,8 @@ io.on('connection', (_socket) => {
         })
 
 
-            .catch(function () {
+            .catch(function (err) {
+                console.log(err);
                 _errAnswer()
             });
 

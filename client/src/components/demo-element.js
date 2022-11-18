@@ -4,9 +4,12 @@ import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 
 import { repeat } from "lit/directives/repeat.js";
 
-/**
- * An example element.
- */
+const data = [{
+  id: 1, value: "first",
+  id: 2, value: "second",
+}];
+
+
 export class DemoElement extends LitElement {
   //just like porps in reactjs
   static get properties() {
@@ -22,11 +25,18 @@ export class DemoElement extends LitElement {
        * @type {number} 
        */
       count: { type: Number },
+
+
+      data: { type: Array }
+
     };
   }
 
   constructor() {
     super();
+
+    this.data = data;
+
     this.name = 'david';
     this.content = "";
     this.count = 0;
@@ -39,6 +49,23 @@ export class DemoElement extends LitElement {
       content: "hello"
     }]
   }
+
+
+  addItem() {
+    console.log(data);
+    const nextId = this.data[this.data.length - 1].id + 1;
+    this.data = [
+      ...this.data,
+      {
+        id: nextId,
+        value: this.content,
+      },
+    ];
+  }
+
+
+
+
 
   static styles = [style];
 
@@ -81,10 +108,10 @@ export class DemoElement extends LitElement {
       <div>Hi, this is a demo element!</div>
       <div>Like this, you can render reactive properties: ${name}</div>
       <div>And like this, you can listen to events:</div>
-      <button @click="${this.onButtonClick}">Number of clicks: ${count}</button>
+      <!-- <button @click="${this.onButtonClick}">Number of clicks: ${count}</button> -->
       <input id="name" @change="${this.onChangeName}">
       <input id="content" @change="${this.onChangeContent}">
-      <button @click="${this.sendMsg}">Click me to send message</button>
+      <button type="submit" @click="${this.addItem}">Click me to send message</button>
       <div>${repeat(this.messages, (msg) => html`<p>${msg.name}:${msg.content}</p>`)}</div>
     `;
   }
