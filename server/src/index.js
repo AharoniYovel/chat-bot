@@ -23,6 +23,10 @@ const io = new Server(http, {
     }
 });
 
+app.get("/", (req, res) => {
+    res.send("Server Open")
+})
+
 
 
 io.on('connection', (_socket) => {
@@ -62,7 +66,6 @@ io.on('connection', (_socket) => {
         };
 
         axios.request(options).then(function (response) {
-            // _resp = response.data;
             console.log(response.data);
             _sendAnswer({
                 status: response.status,
@@ -70,19 +73,10 @@ io.on('connection', (_socket) => {
             });
         })
 
-
             .catch(function (err) {
                 console.log(err);
                 _errAnswer()
             });
-
-
-
-
-
-
-
-
 
     })
 

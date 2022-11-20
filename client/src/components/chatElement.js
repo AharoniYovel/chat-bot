@@ -1,66 +1,42 @@
 import { LitElement, html } from 'lit';
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
 
-
-
 export class ChatElem extends LitElement {
-
 
     static get properties() {
         return {
-            name: { type: String },
-            msg: { type: String },
-            div: { type: Object },
-            numOfmsg: { type: Number }
-
+            clientMessages: { type: Array },
+            input: { type: String },
+            botMessages: { type: Array },
         };
     }
 
     constructor() {
         super();
-        this.name = 'You';
-        this.bot = 'Bot';
-        this.numOfmsg = 0;
-        this.div;
 
-
+        this.clientMessages = [];
+        this.input = "";
+        this.botMessages = [{ message: "Hey there 😃 , what is your name?" }];
 
         this.socket = io('http://localhost:3000', { extraHeaders: { "Access-Control-Allow-Origin": "*" } });
 
-
         this.socket.on("respAnswer", (_data) => {
-            console.log(_data.botResp || _data._errAnswer);
-            this.numOfmsg++;
-            // let div = document.querySelector(".messages-content");
-            // div.textContent += 'dd';
+            if (_data.status === 200) {
+                this.botMessages = [...this.botMessages, _data.botResp];
+            }
+            else {
+                this.botMessages = [...this.botMessages, _data._errAnswer];
+            }
 
+            // ! how to scroll the div down? how to use jquery?
+            // document.querySelector(".messages-content").scrollIntoView(true);
         })
     }
 
-
-
-    _textAreaVal = (e) => {
-        this.socket.emit("chat", e.target.value);
-    }
-
-
     render() {
-        const { _textAreaVal, msg, div } = this;
-
         return html`
 
-
-
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
-<link rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.3/jquery.mCustomScrollbar.min.css">
 <link rel="stylesheet" href="./src/components/chat/chat.css">
-
-
-<!-- ${this.numOfmsg % 2 === 0 ? html`bot:<div>200</div>` : html`you:<div>404</div>`} -->
-
-
 
 <div class="chat">
     <div class="chat-title">
@@ -71,27 +47,66 @@ export class ChatElem extends LitElement {
         </figure>
     </div>
     <div class="messages">
+
         <div class="messages-content">
+
+            <div class="left-div">
+                ${this.botMessages.map(_msg => html`
+                <div>
+                    <p>Bot:</p>
+                    <main>${_msg.message}</main>
+                </div>
+                `)}
+            </div>
+
+            <div class="right-div">
+                ${this.clientMessages.map(_msg => html`
+                <div>
+                    <p>You:</p>
+                    <main>${_msg.message}</main>
+                </div>
+                `)}
+            </div>
+
         </div>
+
     </div>
-    <div class="message-box">
-        <textarea @change="${_textAreaVal}" type="text" class="message-input" placeholder="Type message..."></textarea>
-        <button style="cursor:pointer" type="submit" class="message-submit">Send</button>
+
+    <div class="message-box" @keyup=${this.pressEnter}>
+        <input .value="${this.input}" @change="${this.updateClientInput}" class="message-input"
+            placeholder="Type message..." />
+        <button style="cursor:pointer" @click="${this.addInput}" class="message-submit">Send</button>
     </div>
 
 </div>
 <div class="bg"></div>
-
-
-
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script> -->
-
-
         `;
     }
 
+    pressEnter(e) {
+        if (e.key === 13) {
+            this.addInput();
+        }
+    }
 
+    updateClientInput(e) {
+        this.input = e.target.value;
+        this.socket.emit("chat", e.target.value);
+    }
 
+    addInput() {
+        if (this.input) {
+            this.clientMessages = [...this.clientMessages, { message: this.input }];
+            this.input = "";
+        }
+    }
+
+    scroll() {
+        let leftScroll = document.querySelector('.left-div')
+        let rightScroll = document.querySelector('.right-div')
+        leftScroll.scrollTop = scrollMsg.scrollHeight;
+        rightScroll.scrollTop = scrollMsg.scrollHeight;
+    }
 
 }
 
