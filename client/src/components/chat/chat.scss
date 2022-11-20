@@ -110,6 +110,7 @@ body {
     overflow: hidden;
     position: relative;
     width: 100%;
+    overflow-y: auto;
 }
 
 .messages .messages-content {
@@ -117,25 +118,21 @@ body {
     font-family: sans-serif;
     font-weight: 600;
     position: absolute;
-    display: flex;
     top: 0;
     left: 0;
     height: 100%;
     width: 100%;
-    float: right;
-    overflow-y: auto;
 
     .right-div {
-        width: 50%;
-        height: 100%;
-        
-
+        width: 100%;
+        float: right;
 
         div {
-            width: 90%;
+            width: 70%;
             background: linear-gradient(120deg, #248A52, #257287);
             border-radius: 10px 0 10px 10px;
             margin: 4px;
+            float: right;
 
             p {
                 direction: rtl;
@@ -147,20 +144,17 @@ body {
                 padding: 4px;
                 margin: 0;
             }
-
-
-
         }
     }
 
     .left-div {
-        width: 50%;
-        height: 100%;
+        width: 100%;
+        float: left;
 
         div {
             background: linear-gradient(120deg, #b6b82d, #b7bbbc);
             border-radius: 0 10px 10px 10px;
-            width: 90%;
+            width: 70%;
             margin: 4px;
 
             p,
@@ -168,12 +162,12 @@ body {
                 padding: 4px;
                 margin: 0;
             }
-
         }
     }
-
-
 }
+
+
+
 
 
 .messages .message .avatar img {
