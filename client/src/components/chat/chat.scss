@@ -125,24 +125,25 @@ body {
 
     .right-div {
         width: 100%;
-        float: right;
+        display: flex;
+        direction: rtl;
+
+        i {
+            font-size: 2em;
+            float: right;
+        }
 
         div {
-            width: 70%;
+            width: 60%;
             background: linear-gradient(120deg, #248A52, #257287);
             border-radius: 10px 0 10px 10px;
             margin: 4px;
             float: right;
 
-            p {
-                direction: rtl;
-                padding: 4px;
-                margin: 0;
-            }
-
             main {
                 padding: 4px;
                 margin: 0;
+                direction: ltr;
             }
         }
     }
@@ -150,6 +151,24 @@ body {
     .left-div {
         width: 100%;
         float: left;
+        display: flex;
+        padding: 4px;
+
+        .avatar {
+            z-index: 1;
+            border-radius: 30px;
+            width: 40px;
+            height: 35px;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            border: 2px solid rgba(255, 255, 255, 0.24);
+        }
+
+        .avatar img {
+            width: 100%;
+            height: auto;
+        }
 
         div {
             background: linear-gradient(120deg, #b6b82d, #b7bbbc);

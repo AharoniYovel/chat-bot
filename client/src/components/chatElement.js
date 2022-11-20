@@ -35,10 +35,13 @@ export class ChatElem extends LitElement {
     render() {
 
         return html`
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 
 <link rel="stylesheet" href="./src/components/chat/chat.css">
 
 <div class="chat">
+
     <div class="chat-title">
         <h1>Forter Bot</h1>
         <figure class="avatar">
@@ -47,7 +50,6 @@ export class ChatElem extends LitElement {
         </figure>
     </div>
     <div class="messages">
-
         <div class="messages-content">
 
             ${this.allMsg.map((_msg ,i) => 
@@ -55,8 +57,13 @@ export class ChatElem extends LitElement {
 
                 html`
                       <div class="left-div">
+
+                         <figure class="avatar">
+                          <img
+                           src="https://images.pexels.com/photos/8566462/pexels-photo-8566462.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" />
+                        </figure>
+
                         <div>
-                          <p>Bot:</p>
                           <main>${_msg.message}</main>
                         </div>
                       </div>
@@ -64,15 +71,17 @@ export class ChatElem extends LitElement {
             :
                    html`
                          <div class="right-div">
-                            <div>
-                             <p>You:</p>
-                             <main>${_msg.message}</main>
-                         </div>
+                             <i class="fa fa-user" aria-hidden="true"></i>
+                               <div>
+                                 <main>${_msg.message}</main>
+                                </div>
                        </div>
                    `
             )}
         </div>
     </div>
+
+
 
     <div class="message-box" @keyup=${this.pressEnter}>
         <input .value="${this.input}" @change="${this.updateClientInput}" class="message-input"
