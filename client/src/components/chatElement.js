@@ -83,9 +83,9 @@ export class ChatElem extends LitElement {
 
 
 
-    <div class="message-box" @keyup=${this.pressEnter}>
-        <input .value="${this.input}" @change="${this.updateClientInput}" class="message-input"
-            placeholder="Type message..." />
+    <div class="message-box" >
+        <input  .value="${this.input}" @change="${this.updateClientInput}" class="message-input"
+            placeholder="Type message..." @keyup=${this.pressEnter}/>
         <button style="cursor:pointer" @click="${this.addInput}" class="message-submit">Send</button>
     </div>
 
@@ -95,7 +95,7 @@ export class ChatElem extends LitElement {
     }
 
     pressEnter(e) {
-        if (e.key === 13) {
+        if (e.key === "Enter") {
             this.addInput();
         }
     }
