@@ -27,7 +27,6 @@ app.get("/", (req, res) => {
 })
 
 
-
 io.on('connection', (_socket) => {
     console.log({ new_connection: true, socketID: _socket.id });
 
