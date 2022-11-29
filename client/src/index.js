@@ -1,5 +1,6 @@
 export * from './components/demo-element.js';
 export * from './components/chatElement.js';
+export * from './components/joke-element';
 
 
 //represent a database of questions

@@ -1,12 +1,13 @@
 import { LitElement, html } from 'lit';
 import { io } from "https://cdn.socket.io/4.4.1/socket.io.esm.min.js";
-
 export class ChatElem extends LitElement {
 
     static get properties() {
         return {
             input: { type: String },
-            allMsg: { type: Array }
+            allMsg: { type: Array },
+            talking: { type: String },
+            writeAns: { type: String }
         };
     }
 
@@ -15,26 +16,46 @@ export class ChatElem extends LitElement {
 
         this.input = "";
 
-        this.allMsg = [{ message: "Hey there 😃 , what is your name?" }];
+        this.talking="bot";
+
+        this.writeFirstAns = false;
+        this.writeSecondtAns = false;
+
+        this.allMsg = [{ message: "Hey there 😃 , ask me questions!" }];
 
         this.socket = io('http://localhost:3000', { extraHeaders: { "Access-Control-Allow-Origin": "*" } });
 
-        this.socket.on("respAnswer", (_data) => {
+        this.socket.on("respAnswers", (_data) => {
+            console.log(_data);
             if (_data.status === 200) {
-                this.allMsg = [...this.allMsg, _data.botResp];
-            }
+                this.allMsg = [...this.allMsg, { message: `The answers for you question is: \n  1:${_data.message[0]}\n & 2:${_data.message[1]}` }]
+            } 
             else {
-                this.allMsg = [...this.allMsg, _data._errAnswer];
+                this.allMsg = [...this.allMsg, { message: "I am drunk and can't answer your question" }];
             }
+        })
+        
+        this.socket.on("doesntKnow", (_data) => {
+            if (_data.message) {
+                this.allMsg = [...this.allMsg, { message: _data.message }];
+                this.writeFirstAns=true;
+            }
+             else {
+                this.allMsg = [...this.allMsg, { message: "I am drunk and can't answer your question" }];
+            }
+        })
 
-            // ! how to scroll the div down? how to use jquery?
-            // document.querySelector(".messages-content").scrollIntoView(true);
+        this.socket.on("okFirstAns",(_ok)=>{
+            this.allMsg=[...this.allMsg, { message:_ok } ];
+        })
+
+        this.socket.on("okSecondAns",(_ok)=>{
+            this.allMsg=[...this.allMsg, { message:_ok } ];
         })
     }
 
     render() {
-
-        return html`
+            return html `
           <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 
@@ -53,7 +74,8 @@ export class ChatElem extends LitElement {
         <div class="messages-content">
 
             ${this.allMsg.map((_msg ,i) => 
-                i%2===0?
+            
+                i % 2 === 0 ?
 
                 html`
                       <div class="left-div">
@@ -68,6 +90,7 @@ export class ChatElem extends LitElement {
                         </div>
                       </div>
                    `
+                   
             :
                    html`
                          <div class="right-div">
@@ -88,9 +111,10 @@ export class ChatElem extends LitElement {
             placeholder="Type message..." @keyup=${this.pressEnter}/>
         <button style="cursor:pointer" @click="${this.addInput}" class="message-submit">Send</button>
     </div>
-
+    
 </div>
 <div class="bg"></div>
+
         `;
     }
 
@@ -102,23 +126,27 @@ export class ChatElem extends LitElement {
 
     updateClientInput(e) {
         this.input = e.target.value;
-        this.socket.emit("chat", e.target.value);
     }
-
+    
     addInput() {
         if (this.input) {
             this.allMsg = [...this.allMsg, { message: this.input }];
+            this.socket.emit(this.writeFirstAns? "reciveFirstAns" :this.writeSecondtAns? "reciveSecondAns" : "chat", {question: this.input});
+
+           if (this.writeSecondtAns) {
+             this.writeSecondtAns=false;
+           }
+
+            if (this.writeFirstAns) {
+                this.writeFirstAns=false;
+                this.writeSecondtAns=true;
+            }
+            
+
             this.input = "";
         }
     }
-
-    scroll() {
-        let leftScroll = document.querySelector('.left-div')
-        let rightScroll = document.querySelector('.right-div')
-        leftScroll.scrollTop = scrollMsg.scrollHeight;
-        rightScroll.scrollTop = scrollMsg.scrollHeight;
-    }
-
+ 
 }
 
 window.customElements.define('chat-element', ChatElem);

@@ -1,7 +1,9 @@
-require("dotenv").config();
+import { config } from "dotenv";
+config();
 
 
-exports.dataHide = {
+export const dataHide = {
     name: process.env.NAME,
+    password: process.env.PASSWORD,
     elasticApiKey: process.env.ELASTIC_API_KEY,
 }
