@@ -16,8 +16,6 @@ export class ChatElem extends LitElement {
 
         this.input = "";
 
-        this.talking="bot";
-
         this.writeFirstAns = false;
         this.writeSecondtAns = false;
 
@@ -119,7 +117,7 @@ export class ChatElem extends LitElement {
     }
 
     pressEnter(e) {
-        if (e.key === 13) {
+        if (e.key === "Enter") {
             this.addInput();
         }
     }
