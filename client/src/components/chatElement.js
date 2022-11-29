@@ -7,7 +7,6 @@ export class ChatElem extends LitElement {
             input: { type: String },
             allMsg: { type: Array },
             talking: { type: String },
-            writeAns: { type: String }
         };
     }
 
